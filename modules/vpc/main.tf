@@ -1,15 +1,11 @@
 resource "aws_vpc" "new-vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
   tags = {
     Name = "${var.prefix}-vpc"
   }
 }
 
 data "aws_availability_zones" "available" {}
-
-# output "name" {
-#   value = data.aws_availability_zones.available
-# }
 
 resource "aws_subnet" "subnets" {
   count = 2
@@ -21,16 +17,6 @@ resource "aws_subnet" "subnets" {
     Name = "${var.prefix}-subnet-${count.index}"
   }
 }
-
-# resource "aws_subnet" "new-subnet-2" {
-#   availability_zone = "us-east-1b"
-#   vpc_id = aws_vpc.new-vpc.id
-#   cidr_block = "10.0.2.0/24"
-
-#   tags = {
-#     Name = "${var.prefix}-subnet-2"
-#   }
-# }
 
 resource "aws_internet_gateway" "new-igw" {
   vpc_id = aws_vpc.new-vpc.id

@@ -10,6 +10,14 @@ variable "retention_days" {
   type = number
 }
 
+variable "vpc_id" {
+  type = string
+}
+
+variable "subnet_ids" {
+  type = list(string)
+}
+
 variable "desired_size" {
   type = number
 }
@@ -20,8 +28,4 @@ variable "max_size" {
 
 variable "min_size" {
   type = number
-}
-
-variable "vpc_cidr__cidr_block" {
-  type = string
 }
