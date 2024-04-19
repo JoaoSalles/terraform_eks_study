@@ -4,14 +4,22 @@ module "new-vpc" {
     vpc_cidr = var.vpc_cidr__cidr_block
 }
 
-module "eks" {
-    source = "./modules/eks"
+module "new-lb" {
+    source = "./modules/lb"
     prefix = var.prefix
-    vpc_id = module.new-vpc.vpc_id
-    cluster_name = var.cluster_name
-    retention_days = var.retention_days
     subnet_ids = module.new-vpc.subnet_ids
-    desired_size = var.desired_size
-    max_size = var.max_size
-    min_size = var.min_size
+    vpc_id = module.new-vpc.vpc_id
+
+    depends_on = [ module.new-vpc ]
+}
+
+module "new-ec2-cluster" {
+    source = "./modules/ec2"
+    prefix = var.prefix
+    subnet_ids = module.new-vpc.subnet_ids
+    lb_target_group_arn = module.new-lb.lb_target_group_arn
+    lb_sg_id = module.new-lb.lb_sg_id
+    vpc_id = module.new-vpc.vpc_id
+
+    depends_on = [ module.new-vpc, module.new-lb ]
 }
