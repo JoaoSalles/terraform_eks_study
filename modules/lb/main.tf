@@ -23,6 +23,7 @@ resource "aws_security_group" "load_balancer_security_group" {
   }
 }
 
+// public
 resource "aws_lb_target_group" "target_group" {
   name        = "${var.prefix}-target-group"
   port        = 80
@@ -38,5 +39,41 @@ resource "aws_lb_listener" "listener" {
   default_action {
     type             = "forward"
     target_group_arn = "${aws_lb_target_group.target_group.arn}" # target group
+  }
+}
+
+// private
+resource "aws_lb_target_group" "target_group_private" {
+  name     = "tg-b"
+  port     = 80
+  protocol = "HTTP"
+  target_type = "ip"
+  vpc_id   = "${var.vpc_id}"
+
+  health_check {
+    path = "/"
+    protocol = "HTTP"
+  }
+}
+
+resource "aws_lb_listener_rule" "service_b_rule" {
+  listener_arn = aws_lb_listener.listener.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group_private.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/*"]
+    }
+  }
+
+  condition {
+     source_ip {
+      values = [var.vpc_ip]
+    }
   }
 }

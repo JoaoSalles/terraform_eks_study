@@ -8,7 +8,7 @@ resource "aws_vpc" "new-vpc" {
 data "aws_availability_zones" "available" {}
 
 resource "aws_subnet" "subnets" {
-  count = 2
+  count = var.availability_zones
   availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id = aws_vpc.new-vpc.id
   cidr_block = "10.0.${count.index}.0/24"
@@ -39,7 +39,7 @@ resource "aws_route_table" "new-rtb" {
 }
 
 resource "aws_route_table_association" "new-rtb-association" {
-  count = 2
+  count = var.availability_zones
   route_table_id = aws_route_table.new-rtb.id
   subnet_id = aws_subnet.subnets.*.id[count.index]
 }

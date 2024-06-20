@@ -1,25 +1,19 @@
-resource "aws_ecs_task_definition" "app_task" {
-  family                   = "${var.prefix}-task" # Name your task
+resource "aws_ecs_task_definition" "backend_task" {
+  family                   = "${var.prefix}-backend-task" # Name your task
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "${var.prefix}-task",
-      "image": "docker.io/jaosalless/basic-node-ec2:latest",
+      "name": "${var.prefix}-backend-task",
+      "image": "docker.io/jaosalless/node-base-ec2-private:latest",
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 3000,
-          "hostPort": 3000
+          "containerPort": 5000,
+          "hostPort": 5000
         }
       ],
       "memory": 512,
-      "cpu": 256,
-      "environment": [
-        {
-          "name": "apiURL",
-          "value": "${var.lb_url}"
-        }
-      ]
+      "cpu": 256
     }
   ]
   DEFINITION

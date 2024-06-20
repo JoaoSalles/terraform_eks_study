@@ -14,10 +14,15 @@ variable "lb_sg_id" {
   type = string
 }
 
+variable "sg_public_id" {
+  type = string
+}
+
+
 variable "vpc_id" {
   type = string
 }
 
-variable "lb_url" {
+variable "aws_ecs_cluster_id" {
   type = string
 }

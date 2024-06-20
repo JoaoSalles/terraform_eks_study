@@ -9,3 +9,7 @@ variable "cluster_name" {
 variable "vpc_cidr__cidr_block" {
   type = string
 }
+
+variable "availability_zones" {
+  type = number
+}
